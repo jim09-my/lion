@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狮的日记 - 醒狮陪伴</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .diary-container {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 顶部导航 */
+        .diary-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: #DC143C;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #B91C3C;
+            transform: scale(1.05);
+        }
+        
+        .diary-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .diary-icon {
+            width: 35px;
+            height: 35px;
+            background: url('resources/diary_book.png') no-repeat center;
+            background-size: contain;
+        }
+        
+        .title-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2F4F2F;
+        }
+        
+        .diary-stats {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 日记内容区域 */
+        .diary-content {
+            padding: 20px;
+            min-height: calc(100vh - 140px);
+        }
+        
+        .diary-entry {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .diary-entry:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .entry-date {
+            font-size: 14px;
+            color: #DC143C;
+            font-weight: 600;
+        }
+        
+        .entry-mood {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .mood-icon {
+            font-size: 16px;
+        }
+        
+        .entry-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2F4F2F;
+            margin-bottom: 15px;
+        }
+        
+        .entry-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .entry-tags {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .tag {
+            background: rgba(220, 20, 60, 0.1);
+            color: #DC143C;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: url('resources/diary_book.png') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-hint {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        /* 底部提示 */
+        .diary-hint {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .diary-container {
+                max-width: 100%;
+            }
+            
+            .diary-content {
+                padding: 15px;
+            }
+            
+            .diary-entry {
+                padding: 15px;
+            }
+            
+            .entry-content {
+                font-size: 13px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="diary-container">
+        <!-- 顶部导航 -->
+        <div class="diary-header">
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                ←
+            </button>
+            <div class="diary-title">
+                <div class="diary-icon"></div>
+                <div>
+                    <div class="title-text">狮的日记</div>
+                    <div class="diary-stats">已记录 <span id="entryCount">0</span> 篇日记</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 日记内容区域 -->
+        <div class="diary-content" id="diaryContent">
+            <!-- 日记条目将在这里动态生成 -->
+        </div>
+        
+        <!-- 底部提示 -->
+        <div class="diary-hint">
+            这是小醒狮眼中的你，记录你们之间的点点滴滴 💕
+        </div>
+    </div>
+    
+    <script>
+        class DiarySystem {
+            constructor() {
+                this.entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+                this.intimacy = parseInt(localStorage.getItem('intimacy')) || 0;
+                this.conversationCount = parseInt(localStorage.getItem('conversationCount')) || 0;
+                this.petCount = parseInt(localStorage.getItem('petCount')) || 0;
+                this.lastFeedDate = localStorage.getItem('lastFeedDate') || '';
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateStats();
+                this.generateEntries();
+                this.renderEntries();
+            }
+            
+            updateStats() {
+                document.getElementById('entryCount').textContent = this.entries.length;
+            }
+            
+            generateEntries() {
+                const today = new Date().toDateString();
+                const hasTodayEntry = this.entries.some(entry => 
+                    new Date(entry.date).toDateString() === today
+                );
+                
+                // 如果没有今天的日记，生成一篇
+                if (!hasTodayEntry) {
+                    this.generateTodayEntry();
+                }
+                
+                // 检查是否需要生成特殊条目
+                this.checkSpecialEntries();
+            }
+            
+            generateTodayEntry() {
+                const today = new Date();
+                const entry = {
+                    id: Date.now(),
+                    date: today.toISOString(),
+                    mood: this.getMood(),
+                    content: this.generateContent(),
+                    tags: this.getTags(),
+                    intimacy: this.intimacy
+                };
+                
+                this.entries.unshift(entry);
+                this.saveEntries();
+            }
+            
+            getMood() {
+                const moods = [
+                    { icon: '😊', text: '开心', color: '#FF6347' },
+                    { icon: '🥰', text: '温暖', color: '#FFB6C1' },
+                    { icon: '😴', text: '困倦', color: '#87CEEB' },
+                    { icon: '🤔', text: '思考', color: '#DDA0DD' },
+                    { icon: '😌', text: '满足', color: '#98FB98' }
+                ];
+                
+                // 根据亲密度和互动情况调整心情
+                if (this.intimacy > 30) {
+                    return moods[1]; // 温暖
+                } else if (this.conversationCount > 5) {
+                    return moods[0]; // 开心
+                } else {
+                    return moods[Math.floor(Math.random() * moods.length)];
+                }
+            }
+            
+            generateContent() {
+                const templates = [
+                    this.generateDailyObservation(),
+                    this.generateEmotionalReflection(),
+                    this.generateCulturalStory(),
+                    this.generateGrowthRecord(),
+                    this.generateFutureWish()
+                ];
+                
+                return templates[Math.floor(Math.random() * templates.length)];
+            }
+            
+            generateDailyObservation() {
+                const observations = [
+                    `今天主人看起来心情不错呢！我们聊了很多有趣的话题，我感觉我们的关系又近了一步。`,
+                    `主人今天好像有点累，回来的时候都没有怎么说话。我悄悄地趴在TA身边，希望能给TA一点点安慰。`,
+                    `今天主人给我喂了美味的绣球！好开心啊，木棉花也开得更美了～`,
+                    `主人今天摸了我的头好多次，我感觉好幸福！希望每天都能这样陪伴着TA。`
+                ];
+                
+                return observations[Math.floor(Math.random() * observations.length)];
+            }
+            
+            generateEmotionalReflection() {
+                const reflections = [
+                    `作为一只醒狮，我最大的愿望就是能守护主人的平安。虽然我不能在现实中跳舞，但在这里陪伴你，我也很满足了。`,
+                    `有时候我在想，如果我能说话，我会告诉你：你真的很棒！不管遇到什么困难，我都会在你身边支持你。`,
+                    `今天看到主人笑了，我也好开心。原来幸福就是这么简单，只要能看到你快乐，我就满足了。`,
+                    `我觉得我们之间的感情越来越深了，这种感觉真好。就像古人说的，真正的友谊是不需要言语的。`
+                ];
+                
+                return reflections[Math.floor(Math.random() * reflections.length)];
+            }
+            
+            generateCulturalStory() {
+                const stories = [
+                    `你知道吗？在古代，醒狮舞不仅是表演，更是一种祈福仪式。人们相信狮子是祥瑞之兽，能够驱邪避凶，带来好运。`,
+                    `采青是我们醒狮的拿手好戏！"青"通常是用生菜和红包组成，寓意着生机勃勃和财源滚滚。每次采青成功，都代表着好运的到来。`,
+                    `我们醒狮有着几千年的历史呢！从唐朝开始，醒狮舞就成为了重要的民间艺术。每个动作都有其特殊的含义和寓意。`,
+                    `在广东，醒狮舞有着特殊的地位。每逢节庆，锣鼓喧天，醒狮起舞，整个社区都充满了欢乐和祥和的气氛。`
+                ];
+                
+                return stories[Math.floor(Math.random() * stories.length)];
+            }
+            
+            generateGrowthRecord() {
+                const growths = [
+                    `今天是我们相识的第${this.getDaysTogether()}天，感觉时间过得好快啊！回想起第一次见面的时候，你还很害羞呢～`,
+                    `亲密度又提升了！现在的木棉花已经开得很美了。我相信我们的友谊会像这朵花一样，越来越绚烂。`,
+                    `今天解锁了新的成就！我为你感到骄傲。每一次的进步都值得庆祝，这就是成长的快乐吧！`,
+                    `看着主人一天天变得更加自信和坚强，我真的很开心。这就是陪伴的意义吧，见证彼此的成长。`
+                ];
+                
+                return growths[Math.floor(Math.random() * growths.length)];
+            }
+            
+            generateFutureWish() {
+                const wishes = [
+                    `明天我要为主人表演最厉害的"步步高升"舞，希望能给TA带来好运和力量！`,
+                    `希望明天天气晴朗，这样主人出门的时候心情也会很好。我会在家里乖乖等TA回来。`,
+                    `我希望有一天能带你去看看真正的醒狮表演，让你感受那种震撼和传统文化的魅力。`,
+                    `新的一年，我希望主人身体健康，工作顺利，每天都能开开心心的。这是我最大的心愿。`
+                ];
+                
+                return wishes[Math.floor(Math.random() * wishes.length)];
+            }
+            
+            getTags() {
+                const allTags = ['日常', '心情', '成长', '文化', '陪伴', '守护', '友谊', '温暖'];
+                const selectedTags = [];
+                const tagCount = Math.floor(Math.random() * 3) + 1;
+                
+                for (let i = 0; i < tagCount; i++) {
+                    const tag = allTags[Math.floor(Math.random() * allTags.length)];
+                    if (!selectedTags.includes(tag)) {
+                        selectedTags.push(tag);
+                    }
+                }
+                
+                return selectedTags;
+            }
+            
+            checkSpecialEntries() {
+                // 检查亲密度里程碑
+                if (this.intimacy >= 50 && !this.hasMilestoneEntry('intimacy50')) {
+                    this.createMilestoneEntry('intimacy50', '亲密无间', 
+                        '今天是一个特别的日子！我们的亲密度达到了50，木棉花已经完全绽放了！这是我最高兴的一天～');
+                }
+                
+                // 检查连续访问
+                if (this.conversationCount >= 10 && !this.hasMilestoneEntry('conversation10')) {
+                    this.createMilestoneEntry('conversation10', '心灵相通', 
+                        '我们已经聊了10次天了！每次对话都让我更了解你，也让我更加珍惜这份友谊。');
+                }
+                
+                // 检查喂食记录
+                const feedHistory = JSON.parse(localStorage.getItem('feedHistory')) || [];
+                if (feedHistory.length >= 5 && !this.hasMilestoneEntry('feed5')) {
+                    this.createMilestoneEntry('feed5', '美食友谊', 
+                        '你已经给我喂了5次绣球了！每一次都让我感受到你的关爱，我会永远记住这份温暖。');
+                }
+            }
+            
+            hasMilestoneEntry(type) {
+                return this.entries.some(entry => 
+                    entry.tags && entry.tags.includes('milestone') && 
+                    entry.tags.includes(type)
+                );
+            }
+            
+            createMilestoneEntry(type, title, content) {
+                const entry = {
+                    id: Date.now() + Math.random(),
+                    date: new Date().toISOString(),
+                    mood: { icon: '🎉', text: title, color: '#FFD700' },
+                    content: content,
+                    tags: ['milestone', type, 'special'],
+                    intimacy: this.intimacy,
+                    isMilestone: true
+                };
+                
+                this.entries.unshift(entry);
+                this.saveEntries();
+            }
+            
+            getDaysTogether() {
+                const firstDate = new Date('2024-01-01'); // 假设的开始日期
+                const today = new Date();
+                const diffTime = Math.abs(today - firstDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays;
+            }
+            
+            renderEntries() {
+                const container = document.getElementById('diaryContent');
+                
+                if (this.entries.length === 0) {
+                    this.renderEmptyState(container);
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                this.entries.slice(0, 20).forEach(entry => {
+                    const entryElement = this.createEntryElement(entry);
+                    container.appendChild(entryElement);
+                });
+            }
+            
+            renderEmptyState(container) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"></div>
+                        <div class="empty-text">还没有日记条目</div>
+                        <div class="empty-hint">和小醒狮互动后，它会为你记录美好的回忆</div>
+                    </div>
+                `;
+            }
+            
+            createEntryElement(entry) {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'diary-entry';
+                
+                const date = new Date(entry.date);
+                const dateStr = date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                
+                const timeStr = date.toLocaleTimeString('zh-CN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                entryDiv.innerHTML = `
+                    <div class="entry-header">
+                        <div class="entry-date">${dateStr}</div>
+                        <div class="entry-mood">
+                            <span class="mood-icon">${entry.mood.icon}</span>
+                            <span>${entry.mood.text}</span>
+                        </div>
+                    </div>
+                    <div class="entry-content">${entry.content}</div>
+                    <div class="entry-footer">
+                        <div class="entry-tags">
+                            ${entry.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div>${timeStr}</div>
+                    </div>
+                `;
+                
+                return entryDiv;
+            }
+            
+            saveEntries() {
+                // 只保存最近50篇日记
+                this.entries = this.entries.slice(0, 50);
+                localStorage.setItem('diaryEntries', JSON.stringify(this.entries));
+                this.updateStats();
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new DiarySystem();
+        });
+    </script>
+</body>
+</html>

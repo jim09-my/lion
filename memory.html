@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的回忆 - 醒狮陪伴</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .memory-container {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 顶部导航 */
+        .memory-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: #DC143C;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #B91C3C;
+            transform: scale(1.05);
+        }
+        
+        .memory-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .memory-icon {
+            width: 35px;
+            height: 35px;
+            background: url('resources/memory_book.png') no-repeat center;
+            background-size: contain;
+        }
+        
+        .title-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2F4F2F;
+        }
+        
+        .memory-stats {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 标签切换 */
+        .tab-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .tab {
+            padding: 12px 0;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: #DC143C;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #DC143C;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            padding: 20px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* 成就系统 */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .achievement-card.locked {
+            opacity: 0.6;
+            background: rgba(200, 200, 200, 0.3);
+        }
+        
+        .achievement-card.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .achievement-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .achievement-icon.unlocked {
+            filter: none;
+        }
+        
+        .achievement-icon.locked {
+            filter: grayscale(100%) brightness(0.7);
+        }
+        
+        .achievement-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2F4F2F;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .achievement-progress {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #DC143C;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        /* 照片墙 */
+        .photo-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .photo-item {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .photo-item.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        
+        .photo-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 10px;
+            font-size: 11px;
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #DC143C;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-left: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            background: #DC143C;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+        
+        .timeline-date {
+            font-size: 12px;
+            color: #DC143C;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2F4F2F;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: url('resources/memory_book.png') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-hint {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        /* 解锁动画 */
+        @keyframes unlock {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .unlock-animation {
+            animation: unlock 0.5s ease-out;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .memory-container {
+                max-width: 100%;
+            }
+            
+            .content-area {
+                padding: 15px;
+            }
+            
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            
+            .achievement-card {
+                padding: 15px;
+            }
+            
+            .photo-wall {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="memory-container">
+        <!-- 顶部导航 -->
+        <div class="memory-header">
+            <button class="back-btn" onclick="window.location.href='index.html'">
+                ←
+            </button>
+            <div class="memory-title">
+                <div class="memory-icon"></div>
+                <div>
+                    <div class="title-text">我们的回忆</div>
+                    <div class="memory-stats">已解锁 <span id="unlockedCount">0</span> 个回忆</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 标签切换 -->
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="achievements">成就徽章</div>
+                <div class="tab" data-tab="photos">照片墙</div>
+                <div class="tab" data-tab="timeline">成长时间线</div>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-area">
+            <!-- 成就徽章 -->
+            <div class="tab-content active" id="achievements">
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- 成就卡片将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 照片墙 -->
+            <div class="tab-content" id="photos">
+                <div class="photo-wall" id="photoWall">
+                    <!-- 照片将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 成长时间线 -->
+            <div class="tab-content" id="timeline">
+                <div class="timeline" id="timeline">
+                    <!-- 时间线项目将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        class MemorySystem {
+            constructor() {
+                this.intimacy = parseInt(localStorage.getItem('intimacy')) || 0;
+                this.conversationCount = parseInt(localStorage.getItem('conversationCount')) || 0;
+                this.petCount = parseInt(localStorage.getItem('petCount')) || 0;
+                this.lastFeedDate = localStorage.getItem('lastFeedDate') || '';
+                this.achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+                this.photos = JSON.parse(localStorage.getItem('photos')) || [];
+                this.timelineEvents = JSON.parse(localStorage.getItem('timelineEvents')) || [];
+                
+                this.achievementDefinitions = [
+                    {
+                        id: 'first_meet',
+                        name: '初次相遇',
+                        description: '第一次与小醒狮见面',
+                        icon: '👋',
+                        condition: () => this.intimacy >= 1,
+                        unlocked: false
+                    },
+                    {
+                        id: 'first_chat',
+                        name: '心灵对话',
+                        description: '完成第一次对话',
+                        icon: '💬',
+                        condition: () => this.conversationCount >= 1,
+                        unlocked: false
+                    },
+                    {
+                        id: 'first_feed',
+                        name: '美食友谊',
+                        description: '第一次喂食绣球',
+                        icon: '🎾',
+                        condition: () => this.lastFeedDate !== '',
+                        unlocked: false
+                    },
+                    {
+                        id: 'intimacy_10',
+                        name: '友谊萌芽',
+                        description: '亲密度达到10',
+                        icon: '🌱',
+                        condition: () => this.intimacy >= 10,
+                        unlocked: false
+                    },
+                    {
+                        id: 'intimacy_30',
+                        name: '亲密伙伴',
+                        description: '亲密度达到30',
+                        icon: '🌸',
+                        condition: () => this.intimacy >= 30,
+                        unlocked: false
+                    },
+                    {
+                        id: 'intimacy_50',
+                        name: '心灵相通',
+                        description: '亲密度达到50',
+                        icon: '🌺',
+                        condition: () => this.intimacy >= 50,
+                        unlocked: false
+                    },
+                    {
+                        id: 'chat_5',
+                        name: '健谈好友',
+                        description: '完成5次对话',
+                        icon: '🗣️',
+                        condition: () => this.conversationCount >= 5,
+                        unlocked: false
+                    },
+                    {
+                        id: 'chat_15',
+                        name: '知音伙伴',
+                        description: '完成15次对话',
+                        icon: '🎯',
+                        condition: () => this.conversationCount >= 15,
+                        unlocked: false
+                    },
+                    {
+                        id: 'pet_20',
+                        name: '温暖抚摸',
+                        description: '抚摸小醒狮20次',
+                        icon: '👋',
+                        condition: () => this.petCount >= 20,
+                        unlocked: false
+                    },
+                    {
+                        id: 'culture_learner',
+                        name: '文化传承',
+                        description: '了解醒狮文化',
+                        icon: '🏮',
+                        condition: () => this.conversationCount >= 8,
+                        unlocked: false
+                    },
+                    {
+                        id: 'daily_visitor',
+                        name: '每日相伴',
+                        description: '连续3天访问',
+                        icon: '📅',
+                        condition: () => this.checkConsecutiveDays(3),
+                        unlocked: false
+                    },
+                    {
+                        id: 'loyal_friend',
+                        name: '忠诚伙伴',
+                        description: '连续7天访问',
+                        icon: '💎',
+                        condition: () => this.checkConsecutiveDays(7),
+                        unlocked: false
+                    }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.bindEvents();
+                this.checkAchievements();
+                this.updateStats();
+                this.renderAll();
+            }
+            
+            bindEvents() {
+                // 标签切换
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        this.switchTab(tab.dataset.tab);
+                    });
+                });
+            }
+            
+            switchTab(tabName) {
+                // 更新标签状态
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // 更新内容状态
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+                
+                // 渲染对应内容
+                this.renderTabContent(tabName);
+            }
+            
+            checkAchievements() {
+                let newUnlocks = 0;
+                
+                this.achievementDefinitions.forEach(achievement => {
+                    if (!achievement.unlocked && achievement.condition()) {
+                        achievement.unlocked = true;
+                        this.unlockAchievement(achievement);
+                        newUnlocks++;
+                    }
+                });
+                
+                if (newUnlocks > 0) {
+                    this.saveAchievements();
+                }
+            }
+            
+            unlockAchievement(achievement) {
+                // 添加到已解锁成就
+                this.achievements.push({
+                    id: achievement.id,
+                    unlockedAt: new Date().toISOString(),
+                    name: achievement.name,
+                    description: achievement.description
+                });
+                
+                // 添加到时间线
+                this.timelineEvents.push({
+                    date: new Date().toISOString(),
+                    title: `解锁成就：${achievement.name}`,
+                    description: achievement.description,
+                    type: 'achievement'
+                });
+                
+                // 生成照片
+                this.generatePhoto(achievement);
+                
+                // 保存数据
+                this.saveTimeline();
+                this.savePhotos();
+            }
+            
+            generatePhoto(achievement) {
+                const photos = [
+                    {
+                        title: `解锁成就：${achievement.name}`,
+                        description: achievement.description,
+                        emoji: achievement.icon,
+                        date: new Date().toISOString(),
+                        type: 'achievement'
+                    }
+                ];
+                
+                this.photos.push(...photos);
+            }
+            
+            updateStats() {
+                const unlockedCount = this.achievements.length;
+                document.getElementById('unlockedCount').textContent = unlockedCount;
+            }
+            
+            renderAll() {
+                this.renderAchievements();
+                this.renderPhotos();
+                this.renderTimeline();
+            }
+            
+            renderTabContent(tabName) {
+                switch(tabName) {
+                    case 'achievements':
+                        this.renderAchievements();
+                        break;
+                    case 'photos':
+                        this.renderPhotos();
+                        break;
+                    case 'timeline':
+                        this.renderTimeline();
+                        break;
+                }
+            }
+            
+            renderAchievements() {
+                const container = document.getElementById('achievementsGrid');
+                container.innerHTML = '';
+                
+                this.achievementDefinitions.forEach(achievement => {
+                    const card = this.createAchievementCard(achievement);
+                    container.appendChild(card);
+                });
+            }
+            
+            createAchievementCard(achievement) {
+                const card = document.createElement('div');
+                card.className = `achievement-card ${achievement.unlocked ? '' : 'locked'}`;
+                
+                const progress = this.getAchievementProgress(achievement);
+                
+                card.innerHTML = `
+                    <div class="achievement-icon ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                        ${achievement.icon}
+                    </div>
+                    <div class="achievement-name">${achievement.name}</div>
+                    <div class="achievement-desc">${achievement.description}</div>
+                    ${!achievement.unlocked && progress ? 
+                        `<div class="achievement-progress">${progress}</div>` : ''}
+                `;
+                
+                if (achievement.unlocked) {
+                    card.addEventListener('click', () => {
+                        this.showAchievementDetail(achievement);
+                    });
+                }
+                
+                return card;
+            }
+            
+            getAchievementProgress(achievement) {
+                switch(achievement.id) {
+                    case 'intimacy_10':
+                        return `${this.intimacy}/10`;
+                    case 'intimacy_30':
+                        return `${this.intimacy}/30`;
+                    case 'intimacy_50':
+                        return `${this.intimacy}/50`;
+                    case 'chat_5':
+                        return `${this.conversationCount}/5`;
+                    case 'chat_15':
+                        return `${this.conversationCount}/15`;
+                    case 'pet_20':
+                        return `${this.petCount}/20`;
+                    default:
+                        return null;
+                }
+            }
+            
+            renderPhotos() {
+                const container = document.getElementById('photoWall');
+                container.innerHTML = '';
+                
+                if (this.photos.length === 0) {
+                    this.renderEmptyPhotoWall(container);
+                    return;
+                }
+                
+                this.photos.forEach(photo => {
+                    const photoItem = this.createPhotoItem(photo);
+                    container.appendChild(photoItem);
+                });
+                
+                // 添加空位提示
+                for (let i = this.photos.length; i < 12; i++) {
+                    const emptyItem = this.createEmptyPhotoItem();
+                    container.appendChild(emptyItem);
+                }
+            }
+            
+            renderEmptyPhotoWall(container) {
+                for (let i = 0; i < 12; i++) {
+                    const emptyItem = this.createEmptyPhotoItem();
+                    container.appendChild(emptyItem);
+                }
+            }
+            
+            createPhotoItem(photo) {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                
+                const date = new Date(photo.date).toLocaleDateString('zh-CN');
+                
+                item.innerHTML = `
+                    <div class="photo-placeholder">
+                        ${photo.emoji || '📸'}
+                    </div>
+                    <div class="photo-info">
+                        <div>${photo.title}</div>
+                        <div style="font-size: 10px; opacity: 0.8;">${date}</div>
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    this.showPhotoDetail(photo);
+                });
+                
+                return item;
+            }
+            
+            createEmptyPhotoItem() {
+                const item = document.createElement('div');
+                item.className = 'photo-item empty';
+                item.innerHTML = `
+                    <div style="opacity: 0.5;">
+                        等待解锁<br>
+                        <small>继续互动获得照片</small>
+                    </div>
+                `;
+                return item;
+            }
+            
+            renderTimeline() {
+                const container = document.getElementById('timeline');
+                container.innerHTML = '';
+                
+                if (this.timelineEvents.length === 0) {
+                    this.renderEmptyTimeline(container);
+                    return;
+                }
+                
+                // 按时间排序
+                const sortedEvents = this.timelineEvents
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 20);
+                
+                sortedEvents.forEach(event => {
+                    const timelineItem = this.createTimelineItem(event);
+                    container.appendChild(timelineItem);
+                });
+            }
+            
+            renderEmptyTimeline(container) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"></div>
+                        <div class="empty-text">还没有回忆记录</div>
+                        <div class="empty-hint">和小醒狮互动，创造美好的回忆吧</div>
+                    </div>
+                `;
+            }
+            
+            createTimelineItem(event) {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                const date = new Date(event.date);
+                const dateStr = date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const timeStr = date.toLocaleTimeString('zh-CN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                item.innerHTML = `
+                    <div class="timeline-date">${dateStr} ${timeStr}</div>
+                    <div class="timeline-title">${event.title}</div>
+                    <div class="timeline-desc">${event.description}</div>
+                `;
+                
+                return item;
+            }
+            
+            checkConsecutiveDays(days) {
+                // 简化的连续天数检查
+                return this.conversationCount >= days;
+            }
+            
+            showAchievementDetail(achievement) {
+                alert(`🏆 ${achievement.name}\n\n${achievement.description}\n\n解锁时间：${new Date().toLocaleDateString('zh-CN')}`);
+            }
+            
+            showPhotoDetail(photo) {
+                alert(`📸 ${photo.title}\n\n${photo.description}\n\n拍摄时间：${new Date(photo.date).toLocaleDateString('zh-CN')}`);
+            }
+            
+            saveAchievements() {
+                localStorage.setItem('achievements', JSON.stringify(this.achievements));
+            }
+            
+            savePhotos() {
+                localStorage.setItem('photos', JSON.stringify(this.photos));
+            }
+            
+            saveTimeline() {
+                localStorage.setItem('timelineEvents', JSON.stringify(this.timelineEvents));
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new MemorySystem();
+        });
+    </script>
+</body>
+</html>
