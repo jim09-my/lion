@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #2F4F2F 0%, #1C3A1C 50%, #0F2F0F 100%);
@@ -19,7 +20,7 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         /* 水墨背景效果 */
         .ink-background {
             position: fixed;
@@ -27,14 +28,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 1px, transparent 1px),
-                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 2px, transparent 2px);
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 2px, transparent 2px);
             background-size: 150px 150px, 200px 200px;
             opacity: 0.3;
             z-index: 1;
         }
-        
+
         /* 主容器 */
         .welcome-container {
             max-width: 420px;
@@ -48,28 +49,28 @@
             position: relative;
             z-index: 2;
         }
-        
+
         /* 标题 */
         .welcome-title {
             text-align: center;
             margin-bottom: 40px;
             color: #F5F5DC;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        
+
         .main-title {
             font-size: 28px;
             font-weight: 600;
             margin-bottom: 10px;
             letter-spacing: 2px;
         }
-        
+
         .sub-title {
             font-size: 16px;
             opacity: 0.8;
             font-weight: 300;
         }
-        
+
         /* 石狮子容器 */
         .lion-statue-container {
             position: relative;
@@ -79,79 +80,47 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .lion-statue {
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #8B7355, #6B5B47);
             border-radius: 20px;
             position: relative;
-            box-shadow: 
-                inset -10px -10px 20px rgba(0,0,0,0.3),
-                inset 10px 10px 20px rgba(255,255,255,0.1),
-                0 20px 40px rgba(0,0,0,0.4);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 120px;
-            color: #5A4A3A;
             transition: all 0.5s ease;
+            overflow: hidden;
         }
-        
-        .lion-statue.animated {
-            animation: stoneToLife 2s ease-out forwards;
+
+        .lion-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 1s ease;
+            filter: grayscale(80%) brightness(0.7);
+            /* 沉睡状态 - 灰白暗淡 */
         }
-        
-        @keyframes stoneToLife {
+
+        .lion-statue.animated .lion-image {
+            filter: grayscale(0%) brightness(1);
+            /* 唤醒状态 - 彩色明亮 */
+            transform: scale(1.1);
+        }
+
+
+        @keyframes subtleGlow {
             0% {
-                background: linear-gradient(145deg, #8B7355, #6B5B47);
-                color: #5A4A3A;
-                transform: scale(1);
+                transform: translateX(-50%) scale(1);
             }
-            50% {
-                background: linear-gradient(145deg, #DC143C, #FF6347);
-                color: #FFD700;
-                transform: scale(1.05);
-            }
+
             100% {
-                background: linear-gradient(145deg, #FFD700, #FF6347);
-                color: #DC143C;
-                transform: scale(1);
+                transform: translateX(-50%) scale(1.05);
             }
         }
-        
-        /* 眼睛光效 */
-        .eye-glow {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 20px;
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-        
-        .eye-glow.active {
-            opacity: 1;
-            animation: eyeGlow 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes eyeGlow {
-            0%, 100% {
-                box-shadow: 
-                    0 0 20px #FFD700,
-                    0 0 40px #FFD700,
-                    0 0 60px #FFD700;
-            }
-            50% {
-                box-shadow: 
-                    0 0 30px #FF6347,
-                    0 0 60px #FF6347,
-                    0 0 90px #FF6347;
-            }
-        }
-        
+
         /* 朱砂盘 */
         .ink-stone {
             width: 120px;
@@ -165,12 +134,12 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         .ink-stone.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         .ink-stone::before {
             content: '';
             position: absolute;
@@ -181,9 +150,14 @@
             height: 40px;
             background: radial-gradient(ellipse, #DC143C, #8B0000);
             border-radius: 50%;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
         }
-        
+
+        .ink-stone:hover::before {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
         .ink-stone::after {
             content: '朱砂';
             position: absolute;
@@ -194,7 +168,7 @@
             font-size: 12px;
             opacity: 0.8;
         }
-        
+
         /* 开始按钮 */
         .start-button {
             background: linear-gradient(45deg, #DC143C, #FF6347);
@@ -210,17 +184,17 @@
             opacity: 0;
             transform: translateY(20px);
         }
-        
+
         .start-button.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         .start-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(220, 20, 60, 0.4);
         }
-        
+
         /* 点睛提示 */
         .dotting-hint {
             position: absolute;
@@ -237,11 +211,11 @@
             pointer-events: none;
             z-index: 10;
         }
-        
+
         .dotting-hint.show {
             opacity: 1;
         }
-        
+
         /* 名字输入 */
         .name-input-container {
             position: fixed;
@@ -255,7 +229,7 @@
             align-items: center;
             z-index: 100;
         }
-        
+
         .name-input-box {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -264,14 +238,14 @@
             max-width: 300px;
             width: 90%;
         }
-        
+
         .name-input-title {
             font-size: 20px;
             color: #2F4F2F;
             margin-bottom: 20px;
             font-weight: 600;
         }
-        
+
         .name-input {
             width: 100%;
             padding: 12px 16px;
@@ -283,12 +257,12 @@
             outline: none;
             transition: all 0.3s ease;
         }
-        
+
         .name-input:focus {
             border-color: #DC143C;
             box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
         }
-        
+
         .confirm-name-btn {
             background: linear-gradient(45deg, #DC143C, #FF6347);
             color: white;
@@ -299,18 +273,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .confirm-name-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
         }
-        
+
         .confirm-name-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         /* 粒子效果 */
         .particle {
             position: absolute;
@@ -321,66 +295,93 @@
             pointer-events: none;
             animation: particleFloat 3s ease-out forwards;
         }
-        
+
         @keyframes particleFloat {
             0% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-200px) scale(0);
             }
         }
-        
+
+        /* 重新开始按钮 */
+        .restart-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .restart-button.show {
+            opacity: 1;
+        }
+
+        .restart-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         /* 响应式设计 */
         @media (max-width: 480px) {
             .welcome-container {
                 padding: 15px;
             }
-            
+
             .main-title {
                 font-size: 24px;
             }
-            
+
             .lion-statue-container {
                 width: 200px;
                 height: 240px;
             }
-            
-            .lion-statue {
-                font-size: 100px;
-            }
-            
+
             .start-button {
                 padding: 12px 30px;
                 font-size: 16px;
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
+
 <body>
     <div class="ink-background"></div>
-    
+
     <div class="welcome-container">
         <div class="welcome-title">
             <div class="main-title">醒狮陪伴</div>
             <div class="sub-title">传承千年的守护之灵</div>
         </div>
-        
+
         <div class="lion-statue-container" id="lionStatueContainer">
-            <div class="lion-statue" id="lionStatue">🦁</div>
-            <div class="eye-glow" id="eyeGlow"></div>
+            <div class="lion-statue" id="lionStatue">
+                <!-- 替换为你的沉睡图片路径 -->
+                <img src="/resources/lion_sleep.png" alt="沉睡的狮子" class="lion-image">
+            </div>
+            <div class="eye-glow" id="eyeGlow">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
         </div>
-        
+
         <div class="ink-stone" id="inkStone"></div>
-        
+
         <div class="dotting-hint" id="dottingHint">蘸取朱砂，为醒狮点睛</div>
-        
+
         <button class="start-button" id="startButton">开始唤醒仪式</button>
+        <button class="restart-button" id="restartButton">重新开始</button>
     </div>
-    
+
     <div class="name-input-container" id="nameInputContainer">
         <div class="name-input-box">
             <div class="name-input-title">为你的醒狮取个名字吧</div>
@@ -388,7 +389,7 @@
             <button class="confirm-name-btn" id="confirmNameBtn" disabled>确认</button>
         </div>
     </div>
-    
+
     <script>
         class WelcomeRitual {
             constructor() {
@@ -396,41 +397,77 @@
                 this.lionName = '';
                 this.init();
             }
-            
+
             init() {
                 this.bindEvents();
+                this.resetRitual(); // 初始化时重置仪式状态
                 this.showStep(0);
             }
-            
+
+            // 重置所有状态，回到初始状态
+            resetRitual() {
+                const lionStatue = document.getElementById('lionStatue');
+                const eyeGlow = document.getElementById('eyeGlow');
+                const inkStone = document.getElementById('inkStone');
+                const startButton = document.getElementById('startButton');
+                const restartButton = document.getElementById('restartButton');
+                const dottingHint = document.getElementById('dottingHint');
+                const nameInputContainer = document.getElementById('nameInputContainer');
+
+                // 重置狮子状态
+                lionStatue.classList.remove('animated');
+                eyeGlow.classList.remove('active');
+
+                // 重置UI元素
+                inkStone.classList.remove('show');
+                dottingHint.classList.remove('show');
+                nameInputContainer.style.display = 'none';
+                document.getElementById('nameInput').value = '';
+
+                // 重置按钮状态
+                startButton.style.display = 'block';
+                restartButton.classList.remove('show');
+
+                // 重置步骤
+                this.step = 0;
+                this.lionName = '';
+            }
+
             bindEvents() {
                 // 开始按钮
                 document.getElementById('startButton').addEventListener('click', () => {
                     this.startRitual();
                 });
-                
+
+                // 重新开始按钮
+                document.getElementById('restartButton').addEventListener('click', () => {
+                    this.resetRitual();
+                    this.showStep(0);
+                });
+
                 // 朱砂盘点击
                 document.getElementById('inkStone').addEventListener('click', () => {
-                    this.dotEyes();
+                    this.activateInkStone();
                 });
-                
+
                 // 石狮子点击
                 document.getElementById('lionStatueContainer').addEventListener('click', () => {
                     if (this.step === 2) {
                         this.dotEyes();
                     }
                 });
-                
+
                 // 名字输入
                 document.getElementById('nameInput').addEventListener('input', (e) => {
                     this.lionName = e.target.value.trim();
                     document.getElementById('confirmNameBtn').disabled = !this.lionName;
                 });
-                
+
                 // 确认名字
                 document.getElementById('confirmNameBtn').addEventListener('click', () => {
                     this.completeRitual();
                 });
-                
+
                 // 回车确认
                 document.getElementById('nameInput').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && this.lionName) {
@@ -438,11 +475,11 @@
                     }
                 });
             }
-            
+
             showStep(step) {
                 this.step = step;
-                
-                switch(step) {
+
+                switch (step) {
                     case 0: // 初始状态
                         anime({
                             targets: '.start-button',
@@ -453,28 +490,22 @@
                             easing: 'easeOutBack'
                         });
                         break;
-                        
+
                     case 1: // 显示朱砂盘
-                        anime({
-                            targets: '.ink-stone',
-                            opacity: [0, 1],
-                            translateY: [20, 0],
-                            duration: 600,
-                            easing: 'easeOutBack'
-                        });
-                        
+                        document.getElementById('inkStone').classList.add('show');
+
                         setTimeout(() => {
                             document.getElementById('dottingHint').classList.add('show');
                         }, 800);
                         break;
-                        
+
                     case 2: // 等待点睛
-                        // 石狮子微微发光，提示可以点击
-                        document.getElementById('lionStatue').style.filter = 'brightness(1.2)';
+                        // 狮子微微发光，提示可以点击
+                        document.getElementById('lionStatue').style.filter = 'grayscale(60%) brightness(0.8)';
                         break;
                 }
             }
-            
+
             startRitual() {
                 // 隐藏开始按钮
                 anime({
@@ -484,44 +515,60 @@
                     duration: 400,
                     easing: 'easeInBack',
                     complete: () => {
+                        document.getElementById('startButton').style.display = 'none';
                         this.showStep(1);
                     }
                 });
-                
-                // 播放开始音效（如果有的话）
+
+                // 创建粒子效果
                 this.createParticles();
             }
-            
-            dotEyes() {
-                if (this.step !== 2) {
+
+            activateInkStone() {
+                if (this.step === 1) {
+                    // 朱砂盘点击效果
+                    anime({
+                        targets: '#inkStone',
+                        scale: [1, 0.9, 1],
+                        duration: 300,
+                        easing: 'easeInOutQuad'
+                    });
+
+                    // 显示点睛提示
+                    document.getElementById('dottingHint').textContent = "现在为醒狮点睛";
+
+                    // 进入点睛步骤
                     this.showStep(2);
-                    return;
                 }
-                
+            }
+
+            dotEyes() {
+                if (this.step !== 2) return;
+
                 // 隐藏提示
                 document.getElementById('dottingHint').classList.remove('show');
-                
+
                 // 播放点睛动画
                 this.playDottingAnimation();
             }
-            
+
             playDottingAnimation() {
                 const lionStatue = document.getElementById('lionStatue');
                 const eyeGlow = document.getElementById('eyeGlow');
-                
-                // 石狮子变活
+
+                // 狮子变活
                 lionStatue.classList.add('animated');
-                
-                // 眼睛发光
+
+                // 眼睛激活
                 setTimeout(() => {
                     eyeGlow.classList.add('active');
                 }, 1000);
-                
+
                 // 创建庆祝粒子
                 setTimeout(() => {
                     this.createCelebrationParticles();
                 }, 1500);
-                
+
                 // 显示名字输入
                 setTimeout(() => {
                     document.getElementById('nameInputContainer').style.display = 'flex';
@@ -534,7 +581,7 @@
                     });
                 }, 3000);
             }
-            
+
             createParticles() {
                 for (let i = 0; i < 10; i++) {
                     setTimeout(() => {
@@ -542,9 +589,9 @@
                         particle.className = 'particle';
                         particle.style.left = Math.random() * window.innerWidth + 'px';
                         particle.style.top = Math.random() * window.innerHeight + 'px';
-                        
+
                         document.body.appendChild(particle);
-                        
+
                         setTimeout(() => {
                             if (particle.parentNode) {
                                 particle.parentNode.removeChild(particle);
@@ -553,20 +600,20 @@
                     }, i * 200);
                 }
             }
-            
+
             createCelebrationParticles() {
                 for (let i = 0; i < 20; i++) {
                     setTimeout(() => {
                         const particle = document.createElement('div');
                         particle.className = 'particle';
-                        particle.style.background = '#FFD700';
+                        particle.style.background = '#DC143C';
                         particle.style.left = (window.innerWidth / 2 + (Math.random() - 0.5) * 200) + 'px';
                         particle.style.top = (window.innerHeight / 2 + (Math.random() - 0.5) * 200) + 'px';
                         particle.style.width = '6px';
                         particle.style.height = '6px';
-                        
+
                         document.body.appendChild(particle);
-                        
+
                         setTimeout(() => {
                             if (particle.parentNode) {
                                 particle.parentNode.removeChild(particle);
@@ -575,15 +622,10 @@
                     }, i * 100);
                 }
             }
-            
+
             completeRitual() {
                 if (!this.lionName) return;
-                
-                // 保存名字
-                localStorage.setItem('lionName', this.lionName);
-                localStorage.setItem('ritualCompleted', 'true');
-                localStorage.setItem('intimacy', '10'); // 完成仪式获得初始亲密度
-                
+
                 // 隐藏输入框
                 anime({
                     targets: '.name-input-box',
@@ -597,47 +639,46 @@
                     }
                 });
             }
-            
+
             showCompletion() {
                 // 显示完成提示
                 const completionMessage = document.createElement('div');
                 completionMessage.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: rgba(0, 0, 0, 0.9);
-                    color: #FFD700;
-                    padding: 20px 40px;
-                    border-radius: 20px;
-                    font-size: 18px;
-                    text-align: center;
-                    z-index: 200;
-                `;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: #FFD700;
+        padding: 20px 40px;
+        border-radius: 20px;
+        font-size: 18px;
+        text-align: center;
+        z-index: 200;
+    `;
                 completionMessage.innerHTML = `
-                    <div style="margin-bottom: 10px;">🎉 唤醒成功！</div>
-                    <div style="font-size: 14px; opacity: 0.8;">${this.lionName}将成为你的专属守护灵</div>
-                `;
-                
+        <div style="margin-bottom: 10px;">🎉 唤醒成功！</div>
+        <div style="font-size: 14px; opacity: 0.8;">${this.lionName}将成为你的专属守护灵</div>
+        <div style="font-size: 12px; opacity: 0.6; margin-top: 10px;">即将进入主页面...</div>
+    `;
+
                 document.body.appendChild(completionMessage);
-                
-                // 3秒后跳转到主界面
+
+                // 2秒后跳转到index.html
                 setTimeout(() => {
+                    document.body.removeChild(completionMessage);
+                    // 跳转到主页面
                     window.location.href = 'index.html';
-                }, 3000);
+                }, 2000);
             }
         }
-        
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
-            // 检查是否已经完成过仪式
-            if (localStorage.getItem('ritualCompleted') === 'true') {
-                window.location.href = 'index.html';
-                return;
-            }
-            
+            // 每次加载都创建新的仪式实例，不检查历史状态
             new WelcomeRitual();
         });
     </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,39 +12,67 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         .chat-container {
-            max-width: 420px;
             margin: 0 auto;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             background: rgba(255, 255, 255, 0.1);
         }
-        
+
         /* 顶部导航 */
         .chat-header {
+            flex-shrink: 0;
+            height: 56px;
             background: rgba(255, 255, 255, 0.95);
             padding: 15px 20px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            /* gap: 15px; */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            /* position: sticky; */
+            font-size: 16px;
+            font-weight: 500;
+            /* top: 0;
+            z-index: 100; */
         }
-        
+
+        /* === 新增：页面级框架 === */
+        .chat-page {
+            display: flex;
+            /* 左右分栏 */
+            max-width: 1200px;
+            /* 电脑端可再放大 */
+            margin: 0 auto;
+            height: 100vh;
+            /* 撑满屏幕 */
+            background: #fff;
+            /* 底板白，不破坏你渐变 */
+        }
+
+        /* 左侧先空着，只占宽度 */
+        .history-placeholder {
+            width: 260px;
+            /* 和历史栏同宽，以后直接替换 */
+            flex-shrink: 0;
+            background: #fafafa;
+            /* 与右侧聊天气泡区分即可 */
+            border-right: 1px solid #e0e0e0;
+        }
+
+
+
         .back-btn {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: #DC143C;
             border: none;
             border-radius: 50%;
@@ -52,21 +81,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-        
+
         .back-btn:hover {
             background: #B91C3C;
             transform: scale(1.05);
         }
-        
+
         .lion-info {
             display: flex;
             align-items: center;
             gap: 10px;
             flex: 1;
         }
-        
+
         .lion-avatar {
             width: 40px;
             height: 40px;
@@ -74,68 +103,75 @@
             background-size: contain;
             border-radius: 50%;
         }
-        
+
         .lion-name {
             font-size: 16px;
             font-weight: 600;
             color: #2F4F2F;
         }
-        
+
         .lion-status {
             font-size: 12px;
             color: #666;
         }
-        
+
         /* 聊天内容区域 */
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 12px 16px 0;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
             min-height: 400px;
         }
-        
+
         .message {
             display: flex;
             align-items: flex-end;
-            gap: 10px;
-            animation: messageSlide 0.3s ease-out;
+            gap: 8px;
+            animation: messageSlide 0.2s ease-out;
         }
-        
+
         @keyframes messageSlide {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .message.lion-message {
             align-self: flex-start;
         }
-        
+
         .message.user-message {
             align-self: flex-end;
             flex-direction: row-reverse;
         }
-        
+
         .message-avatar {
             width: 35px;
             height: 35px;
             border-radius: 50%;
             flex-shrink: 0;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
         }
-        
+
         .lion-message .message-avatar {
             background: url('resources/lion_main.png') no-repeat center;
             background-size: contain;
         }
-        
+
         .user-message .message-avatar {
             background: linear-gradient(45deg, #4169E1, #87CEEB);
             display: flex;
@@ -145,35 +181,35 @@
             font-size: 16px;
             font-weight: bold;
         }
-        
+
         .message-content {
             max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 15px;
             line-height: 1.4;
             word-wrap: break-word;
         }
-        
+
         .lion-message .message-content {
             background: rgba(255, 255, 255, 0.9);
             color: #2F4F2F;
             border-bottom-left-radius: 6px;
         }
-        
+
         .user-message .message-content {
             background: linear-gradient(45deg, #DC143C, #FF6347);
             color: white;
-            border-bottom-right-radius: 6px;
+            border-bottom-right-radius: 10px;
         }
-        
+
         .message-time {
             font-size: 11px;
             color: #999;
             margin-top: 5px;
             text-align: right;
         }
-        
+
         /* 特效区域 */
         .effect-area {
             position: fixed;
@@ -184,590 +220,601 @@
             pointer-events: none;
             z-index: 50;
         }
-        
+
         .flower-effect {
             position: absolute;
-            font-size: 24px;
+            font-size: 22px;
             animation: flowerFloat 3s ease-out forwards;
         }
-        
+
         @keyframes flowerFloat {
             0% {
                 opacity: 1;
                 transform: translateY(0) rotate(0deg);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-200px) rotate(360deg);
             }
         }
-        
+
         /* 输入区域 */
         .chat-input-area {
             background: rgba(255, 255, 255, 0.95);
-            padding: 15px 20px;
+            padding: 10px 16px;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .quick-responses {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 8px;
             overflow-x: auto;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
         }
-        
+
         .quick-response {
             background: rgba(220, 20, 60, 0.1);
             border: 1px solid #DC143C;
             color: #DC143C;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
             flex-shrink: 0;
         }
-        
+
         .quick-response:hover {
             background: #DC143C;
             color: white;
             transform: translateY(-2px);
         }
-        
+
         .input-container {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-        
+
         .message-input {
             flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
             border-radius: 25px;
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
             background: white;
         }
-        
+
         .message-input:focus {
             border-color: #DC143C;
             box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
         }
-        
+
         .send-btn {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(45deg, #DC143C, #FF6347);
             border: none;
             border-radius: 50%;
             color: white;
             cursor: pointer;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             flex-shrink: 0;
         }
-        
+
         .send-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
         }
-        
+
         .send-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         /* 打字指示器 */
         .typing-indicator {
             display: none;
             align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 18px;
-            border-bottom-left-radius: 6px;
-            margin-bottom: 15px;
+            gap: 6px;
+            padding: 10px 14px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
             align-self: flex-start;
         }
-        
+
         .typing-indicator.show {
             display: flex;
         }
-        
+
         .typing-dots {
             display: flex;
             gap: 4px;
         }
-        
+
         .typing-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: #999;
             border-radius: 50%;
             animation: typing 1.4s infinite;
         }
-        
+
         .typing-dot:nth-child(2) {
             animation-delay: 0.2s;
         }
-        
+
         .typing-dot:nth-child(3) {
             animation-delay: 0.4s;
         }
-        
+
         @keyframes typing {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 transform: translateY(0);
-                opacity: 0.5;
+                opacity: 0.4;
             }
+
             30% {
-                transform: translateY(-10px);
+                transform: translateY(-6px);
                 opacity: 1;
             }
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 480px) {
             .chat-container {
                 max-width: 100%;
             }
-            
+
             .chat-messages {
                 padding: 15px;
             }
-            
+
             .message-content {
-                max-width: 75%;
-                font-size: 13px;
+                max-width: 72%;
+                font-size: 17px;
             }
-            
+
             .quick-response {
                 padding: 6px 12px;
                 font-size: 12px;
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
+
 <body>
-    <div class="chat-container">
-        <!-- 顶部导航 -->
-        <div class="chat-header">
-            <button class="back-btn" onclick="window.location.href='index.html'">
-                ←
-            </button>
-            <div class="lion-info">
-                <div class="lion-avatar"></div>
-                <div>
-                    <div class="lion-name">小醒狮</div>
-                    <div class="lion-status">在线陪你聊天</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 聊天内容区域 -->
-        <div class="chat-messages" id="chatMessages">
-            <!-- 欢迎消息 -->
-            <div class="message lion-message">
-                <div class="message-avatar"></div>
-                <div class="message-content">
-                    你好呀！我是小醒狮，很高兴和你聊天～
-                    <div class="message-time" id="currentTime"></div>
-                </div>
-            </div>
-            
-            <!-- 打字指示器 -->
-            <div class="typing-indicator" id="typingIndicator">
-                <div class="message-avatar"></div>
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 输入区域 -->
-        <div class="chat-input-area">
-            <div class="quick-responses" id="quickResponses">
-                <div class="quick-response" data-message="你好，小醒狮！">你好，小醒狮！</div>
-                <div class="quick-response" data-message="今天心情不太好">今天心情不太好</div>
-                <div class="quick-response" data-message="给我讲个故事吧">给我讲个故事吧</div>
-                <div class="quick-response" data-message="今天天气真好">今天天气真好</div>
-                <div class="quick-response" data-message="我有点累了">我有点累了</div>
-            </div>
-            
-            <div class="input-container">
-                <input type="text" class="message-input" id="messageInput" 
-                       placeholder="输入你想说的话..." maxlength="200">
-                <button class="send-btn" id="sendBtn">
-                    →
+    <!-- 新增外层 -->
+    <div class="chat-page">
+        <!-- 左侧占位栏：今天只留空 -->
+        <aside class="history-placeholder"></aside>
+        <div class="chat-container">
+            <!-- 顶部导航 -->
+            <div class="chat-header">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    ←
                 </button>
+                <div class="lion-info">
+                    <div class="lion-avatar"></div>
+                    <div>
+                        <div class="lion-name">小醒狮</div>
+                        <div class="lion-status">在线陪你聊天</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聊天内容区域 -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- 欢迎消息 -->
+                <div class="message lion-message">
+                    <div class="message-avatar"></div>
+                    <div class="message-content">
+                        你好呀！我是小醒狮，很高兴和你聊天～
+                        <div class="message-time" id="currentTime"></div>
+                    </div>
+                </div>
+
+                <!-- 打字指示器 -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="message-avatar"></div>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="chat-input-area">
+                <div class="quick-responses" id="quickResponses">
+                    <div class="quick-response" data-message="你好，小醒狮！">你好，小醒狮！</div>
+                    <div class="quick-response" data-message="今天心情不太好">今天心情不太好</div>
+                    <div class="quick-response" data-message="给我讲个故事吧">给我讲个故事吧</div>
+                    <div class="quick-response" data-message="今天天气真好">今天天气真好</div>
+                    <div class="quick-response" data-message="我有点累了">我有点累了</div>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" class="message-input" id="messageInput" placeholder="输入你想说的话..." maxlength="200">
+                    <button class="send-btn" id="sendBtn">
+                        →
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- 特效区域 -->
-    <div class="effect-area" id="effectArea"></div>
-    
-    <script>
-        class ChatSystem {
-            constructor() {
-                this.messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
-                this.currentScript = null;
-                this.scriptStep = 0;
-                this.intimacy = parseInt(localStorage.getItem('intimacy')) || 0;
-                
-                this.scripts = {
-                    comfort: {
-                        triggers: ['难过', '伤心', '哭', '失败', '不好', '糟透'],
-                        messages: [
-                            {
-                                text: '（做出一个抱抱的表情）别难过，我还记得你上次说，准备这次面试熬了好几个晚上。你已经非常非常努力了！奋发图强，下次一定会更好！',
-                                effect: 'flower'
-                            },
-                            {
-                                text: '我为你采来一朵"勇气"之花，希望它能给你带来力量～',
-                                effect: 'flower'
-                            }
-                        ]
-                    },
-                    cultural: {
-                        triggers: ['故事', '文化', '传统', '历史', '传说'],
-                        messages: [
-                            {
-                                text: '今天天气真好，阳光灿烂，最适合"采青"啦！这可是我们醒狮的拿手好戏，寓意着生机勃勃和好运哦！',
-                                effect: null
-                            },
-                            {
-                                text: '在古代，人们相信醒狮能带来好运和平安。每到重要节日，我们就会在锣鼓声中起舞，驱邪避凶，祈求风调雨顺。',
-                                effect: null
-                            }
-                        ]
-                    },
-                    weather: {
-                        triggers: ['天气', '阳光', '下雨', '阴天', '刮风'],
-                        messages: [
-                            {
-                                text: '是啊，这样的天气最适合出去玩耍了！不过能在家里陪着你聊天，我也很开心的～',
-                                effect: null
-                            }
-                        ]
-                    },
-                    tired: {
-                        triggers: ['累', '疲惫', '疲劳', '辛苦', '忙'],
-                        messages: [
-                            {
-                                text: '听起来你今天真的很辛苦呢...要不要试试深呼吸？我陪你一起～（深呼吸动画）',
-                                effect: 'breathe'
-                            },
-                            {
-                                text: '记住，无论什么时候，我都在这里陪着你。来，摸摸我的头，放松一下～',
-                                effect: null
-                            }
-                        ]
-                    }
-                };
-                
-                this.init();
-            }
-            
-            init() {
-                this.bindEvents();
-                this.updateTime();
-                setInterval(() => this.updateTime(), 60000);
-                
-                // 加载历史消息
-                this.loadMessages();
-                
-                // 主动发起对话
-                setTimeout(() => {
-                    this.showProactiveMessage();
-                }, 3000);
-            }
-            
-            bindEvents() {
-                // 发送按钮
-                document.getElementById('sendBtn').addEventListener('click', () => {
-                    this.sendMessage();
-                });
-                
-                // 输入框回车
-                document.getElementById('messageInput').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
+
+        <!-- 特效区域 -->
+        <div class="effect-area" id="effectArea"></div>
+
+        <script>
+            class ChatSystem {
+                constructor() {
+                    this.messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+                    this.currentScript = null;
+                    this.scriptStep = 0;
+                    this.intimacy = parseInt(localStorage.getItem('intimacy')) || 0;
+
+                    this.scripts = {
+                        comfort: {
+                            triggers: ['难过', '伤心', '哭', '失败', '不好', '糟透'],
+                            messages: [
+                                {
+                                    text: '（做出一个抱抱的表情）别难过，我还记得你上次说，准备这次面试熬了好几个晚上。你已经非常非常努力了！奋发图强，下次一定会更好！',
+                                    effect: 'flower'
+                                },
+                                {
+                                    text: '我为你采来一朵"勇气"之花，希望它能给你带来力量～',
+                                    effect: 'flower'
+                                }
+                            ]
+                        },
+                        cultural: {
+                            triggers: ['故事', '文化', '传统', '历史', '传说'],
+                            messages: [
+                                {
+                                    text: '今天天气真好，阳光灿烂，最适合"采青"啦！这可是我们醒狮的拿手好戏，寓意着生机勃勃和好运哦！',
+                                    effect: null
+                                },
+                                {
+                                    text: '在古代，人们相信醒狮能带来好运和平安。每到重要节日，我们就会在锣鼓声中起舞，驱邪避凶，祈求风调雨顺。',
+                                    effect: null
+                                }
+                            ]
+                        },
+                        weather: {
+                            triggers: ['天气', '阳光', '下雨', '阴天', '刮风'],
+                            messages: [
+                                {
+                                    text: '是啊，这样的天气最适合出去玩耍了！不过能在家里陪着你聊天，我也很开心的～',
+                                    effect: null
+                                }
+                            ]
+                        },
+                        tired: {
+                            triggers: ['累', '疲惫', '疲劳', '辛苦', '忙'],
+                            messages: [
+                                {
+                                    text: '听起来你今天真的很辛苦呢...要不要试试深呼吸？我陪你一起～（深呼吸动画）',
+                                    effect: 'breathe'
+                                },
+                                {
+                                    text: '记住，无论什么时候，我都在这里陪着你。来，摸摸我的头，放松一下～',
+                                    effect: null
+                                }
+                            ]
+                        }
+                    };
+
+                    this.init();
+                }
+
+                init() {
+                    this.bindEvents();
+                    this.updateTime();
+                    setInterval(() => this.updateTime(), 60000);
+
+                    // 加载历史消息
+                    this.loadMessages();
+
+                    // 主动发起对话
+                    setTimeout(() => {
+                        this.showProactiveMessage();
+                    }, 3000);
+                }
+
+                bindEvents() {
+                    // 发送按钮
+                    document.getElementById('sendBtn').addEventListener('click', () => {
                         this.sendMessage();
-                    }
-                });
-                
-                // 快速回复
-                document.querySelectorAll('.quick-response').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const message = btn.dataset.message;
-                        this.sendUserMessage(message);
-                        document.getElementById('messageInput').value = message;
                     });
-                });
-            }
-            
-            sendMessage() {
-                const input = document.getElementById('messageInput');
-                const message = input.value.trim();
-                
-                if (!message) return;
-                
-                this.sendUserMessage(message);
-                input.value = '';
-            }
-            
-            sendUserMessage(message) {
-                // 添加用户消息
-                this.addMessage(message, 'user');
-                
-                // 显示打字指示器
-                this.showTypingIndicator();
-                
-                // 延迟回复，模拟思考
-                setTimeout(() => {
-                    this.hideTypingIndicator();
-                    this.generateResponse(message);
-                }, 1500 + Math.random() * 1000);
-            }
-            
-            addMessage(text, sender, effect = null) {
-                const messagesContainer = document.getElementById('chatMessages');
-                const typingIndicator = document.getElementById('typingIndicator');
-                
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}-message`;
-                
-                const time = this.getCurrentTime();
-                
-                messageDiv.innerHTML = `
+
+                    // 输入框回车
+                    document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.sendMessage();
+                        }
+                    });
+
+                    // 快速回复
+                    document.querySelectorAll('.quick-response').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const message = btn.dataset.message;
+                            this.sendUserMessage(message);
+                            document.getElementById('messageInput').value = message;
+                        });
+                    });
+                }
+
+                sendMessage() {
+                    const input = document.getElementById('messageInput');
+                    const message = input.value.trim();
+
+                    if (!message) return;
+
+                    this.sendUserMessage(message);
+                    input.value = '';
+                }
+
+                sendUserMessage(message) {
+                    // 添加用户消息
+                    this.addMessage(message, 'user');
+
+                    // 显示打字指示器
+                    this.showTypingIndicator();
+
+                    // 延迟回复，模拟思考
+                    setTimeout(() => {
+                        this.hideTypingIndicator();
+                        this.generateResponse(message);
+                    }, 1500 + Math.random() * 1000);
+                }
+
+                addMessage(text, sender, effect = null) {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    const typingIndicator = document.getElementById('typingIndicator');
+
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${sender}-message`;
+
+                    const time = this.getCurrentTime();
+
+                    messageDiv.innerHTML = `
                     <div class="message-avatar">${sender === 'user' ? '我' : ''}</div>
                     <div class="message-content">
                         ${text}
                         <div class="message-time">${time}</div>
                     </div>
                 `;
-                
-                // 在打字指示器前插入消息
-                messagesContainer.insertBefore(messageDiv, typingIndicator);
-                
-                // 滚动到底部
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
-                // 保存消息
-                this.messages.push({
-                    text,
-                    sender,
-                    time: new Date().toISOString(),
-                    effect
-                });
-                this.saveMessages();
-                
-                // 播放特效
-                if (effect && sender === 'lion') {
-                    this.playEffect(effect);
-                }
-            }
-            
-            generateResponse(userMessage) {
-                // 检查是否匹配脚本
-                const matchedScript = this.findMatchingScript(userMessage);
-                
-                if (matchedScript) {
-                    this.executeScript(matchedScript);
-                } else {
-                    // 通用回复
-                    this.sendGenericResponse(userMessage);
-                }
-                
-                // 增加亲密度
-                this.increaseIntimacy();
-            }
-            
-            findMatchingScript(message) {
-                const lowerMessage = message.toLowerCase();
-                
-                for (const [key, script] of Object.entries(this.scripts)) {
-                    if (script.triggers.some(trigger => lowerMessage.includes(trigger))) {
-                        return key;
+
+                    // 在打字指示器前插入消息
+                    messagesContainer.insertBefore(messageDiv, typingIndicator);
+
+                    // 滚动到底部
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // 保存消息
+                    this.messages.push({
+                        text,
+                        sender,
+                        time: new Date().toISOString(),
+                        effect
+                    });
+                    this.saveMessages();
+
+                    // 播放特效
+                    if (effect && sender === 'lion') {
+                        this.playEffect(effect);
                     }
                 }
-                
-                return null;
-            }
-            
-            executeScript(scriptKey) {
-                const script = this.scripts[scriptKey];
-                this.currentScript = scriptKey;
-                this.scriptStep = 0;
-                
-                this.sendScriptMessage();
-            }
-            
-            sendScriptMessage() {
-                const script = this.scripts[this.currentScript];
-                const message = script.messages[this.scriptStep];
-                
-                if (message) {
-                    this.addMessage(message.text, 'lion', message.effect);
-                    this.scriptStep++;
-                    
-                    // 如果有下一条消息，延迟发送
-                    if (this.scriptStep < script.messages.length) {
-                        setTimeout(() => {
-                            this.sendScriptMessage();
-                        }, 2000);
+
+                generateResponse(userMessage) {
+                    // 检查是否匹配脚本
+                    const matchedScript = this.findMatchingScript(userMessage);
+
+                    if (matchedScript) {
+                        this.executeScript(matchedScript);
                     } else {
-                        this.currentScript = null;
-                        this.scriptStep = 0;
+                        // 通用回复
+                        this.sendGenericResponse(userMessage);
                     }
+
+                    // 增加亲密度
+                    this.increaseIntimacy();
                 }
-            }
-            
-            sendGenericResponse(message) {
-                const responses = [
-                    '嗯嗯，我明白了～你说得很有道理呢！',
-                    '原来如此，我学到了新知识！',
-                    '哈哈，你真有趣！我喜欢和你聊天～',
-                    '这个角度我从来没有想过，很有意思！',
-                    '你说得对，我会记住的！',
-                    '我觉得你说得很好，继续加油！',
-                    '好呀好呀，我很赞同你的想法！',
-                    '嗯嗯，我听着呢，继续说下去～'
-                ];
-                
-                const response = responses[Math.floor(Math.random() * responses.length)];
-                this.addMessage(response, 'lion');
-            }
-            
-            showProactiveMessage() {
-                const proactiveMessages = [
-                    '今天过得怎么样呀？工作顺利吗？',
-                    '我最近学会了一个新的舞蹈动作，要不要看看？',
-                    '你知道吗？在古代，我们醒狮可是祥瑞之兽呢！',
-                    '今天天气真好，让我想起采青的日子～',
-                    '我偷偷给你准备了一个小惊喜，想知道是什么吗？'
-                ];
-                
-                const message = proactiveMessages[Math.floor(Math.random() * proactiveMessages.length)];
-                this.addMessage(message, 'lion');
-            }
-            
-            playEffect(effectType) {
-                const effectArea = document.getElementById('effectArea');
-                
-                if (effectType === 'flower') {
-                    // 花朵特效
-                    for (let i = 0; i < 8; i++) {
-                        setTimeout(() => {
-                            const flower = document.createElement('div');
-                            flower.className = 'flower-effect';
-                            flower.innerHTML = ['🌸', '🌺', '🌻', '🌷', '🌹'][Math.floor(Math.random() * 5)];
-                            flower.style.left = Math.random() * window.innerWidth + 'px';
-                            flower.style.top = window.innerHeight - 100 + 'px';
-                            
-                            effectArea.appendChild(flower);
-                            
+
+                findMatchingScript(message) {
+                    const lowerMessage = message.toLowerCase();
+
+                    for (const [key, script] of Object.entries(this.scripts)) {
+                        if (script.triggers.some(trigger => lowerMessage.includes(trigger))) {
+                            return key;
+                        }
+                    }
+
+                    return null;
+                }
+
+                executeScript(scriptKey) {
+                    const script = this.scripts[scriptKey];
+                    this.currentScript = scriptKey;
+                    this.scriptStep = 0;
+
+                    this.sendScriptMessage();
+                }
+
+                sendScriptMessage() {
+                    const script = this.scripts[this.currentScript];
+                    const message = script.messages[this.scriptStep];
+
+                    if (message) {
+                        this.addMessage(message.text, 'lion', message.effect);
+                        this.scriptStep++;
+
+                        // 如果有下一条消息，延迟发送
+                        if (this.scriptStep < script.messages.length) {
                             setTimeout(() => {
-                                if (flower.parentNode) {
-                                    flower.parentNode.removeChild(flower);
-                                }
-                            }, 3000);
-                        }, i * 200);
+                                this.sendScriptMessage();
+                            }, 2000);
+                        } else {
+                            this.currentScript = null;
+                            this.scriptStep = 0;
+                        }
                     }
-                } else if (effectType === 'breathe') {
-                    // 呼吸特效（背景颜色变化）
-                    document.body.style.transition = 'background 2s ease';
-                    document.body.style.background = 'linear-gradient(135deg, #E6F3FF 0%, #B8E6B8 100%)';
-                    
-                    setTimeout(() => {
-                        document.body.style.background = 'linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%)';
-                    }, 3000);
                 }
-            }
-            
-            showTypingIndicator() {
-                document.getElementById('typingIndicator').classList.add('show');
-                
-                // 滚动到底部
-                const messagesContainer = document.getElementById('chatMessages');
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-            
-            hideTypingIndicator() {
-                document.getElementById('typingIndicator').classList.remove('show');
-            }
-            
-            increaseIntimacy() {
-                this.intimacy += 2;
-                localStorage.setItem('intimacy', this.intimacy.toString());
-                
-                // 更新主界面的亲密度
-                if (window.LionCompanion) {
-                    window.LionCompanion.getInstance().intimacy = this.intimacy;
-                    window.LionCompanion.getInstance().updateUI();
+
+                sendGenericResponse(message) {
+                    const responses = [
+                        '嗯嗯，我明白了～你说得很有道理呢！',
+                        '原来如此，我学到了新知识！',
+                        '哈哈，你真有趣！我喜欢和你聊天～',
+                        '这个角度我从来没有想过，很有意思！',
+                        '你说得对，我会记住的！',
+                        '我觉得你说得很好，继续加油！',
+                        '好呀好呀，我很赞同你的想法！',
+                        '嗯嗯，我听着呢，继续说下去～'
+                    ];
+
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    this.addMessage(response, 'lion');
                 }
-            }
-            
-            updateTime() {
-                document.getElementById('currentTime').textContent = this.getCurrentTime();
-            }
-            
-            getCurrentTime() {
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                return `${hours}:${minutes}`;
-            }
-            
-            saveMessages() {
-                // 只保存最近50条消息
-                const recentMessages = this.messages.slice(-50);
-                localStorage.setItem('chatMessages', JSON.stringify(recentMessages));
-            }
-            
-            loadMessages() {
-                if (this.messages.length > 0) {
+
+                showProactiveMessage() {
+                    const proactiveMessages = [
+                        '今天过得怎么样呀？工作顺利吗？',
+                        '我最近学会了一个新的舞蹈动作，要不要看看？',
+                        '你知道吗？在古代，我们醒狮可是祥瑞之兽呢！',
+                        '今天天气真好，让我想起采青的日子～',
+                        '我偷偷给你准备了一个小惊喜，想知道是什么吗？'
+                    ];
+
+                    const message = proactiveMessages[Math.floor(Math.random() * proactiveMessages.length)];
+                    this.addMessage(message, 'lion');
+                }
+
+                playEffect(effectType) {
+                    const effectArea = document.getElementById('effectArea');
+
+                    if (effectType === 'flower') {
+                        // 花朵特效
+                        for (let i = 0; i < 8; i++) {
+                            setTimeout(() => {
+                                const flower = document.createElement('div');
+                                flower.className = 'flower-effect';
+                                flower.innerHTML = ['🌸', '🌺', '🌻', '🌷', '🌹'][Math.floor(Math.random() * 5)];
+                                flower.style.left = Math.random() * window.innerWidth + 'px';
+                                flower.style.top = window.innerHeight - 100 + 'px';
+
+                                effectArea.appendChild(flower);
+
+                                setTimeout(() => {
+                                    if (flower.parentNode) {
+                                        flower.parentNode.removeChild(flower);
+                                    }
+                                }, 3000);
+                            }, i * 200);
+                        }
+                    } else if (effectType === 'breathe') {
+                        // 呼吸特效（背景颜色变化）
+                        document.body.style.transition = 'background 2s ease';
+                        document.body.style.background = 'linear-gradient(135deg, #E6F3FF 0%, #B8E6B8 100%)';
+
+                        setTimeout(() => {
+                            document.body.style.background = 'linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%)';
+                        }, 3000);
+                    }
+                }
+
+                showTypingIndicator() {
+                    document.getElementById('typingIndicator').classList.add('show');
+
+                    // 滚动到底部
                     const messagesContainer = document.getElementById('chatMessages');
-                    
-                    this.messages.forEach(msg => {
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = `message ${msg.sender}-message`;
-                        
-                        const time = new Date(msg.time).toLocaleTimeString('zh-CN', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        
-                        messageDiv.innerHTML = `
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+
+                hideTypingIndicator() {
+                    document.getElementById('typingIndicator').classList.remove('show');
+                }
+
+                increaseIntimacy() {
+                    this.intimacy += 2;
+                    localStorage.setItem('intimacy', this.intimacy.toString());
+
+                    // 更新主界面的亲密度
+                    if (window.LionCompanion) {
+                        window.LionCompanion.getInstance().intimacy = this.intimacy;
+                        window.LionCompanion.getInstance().updateUI();
+                    }
+                }
+
+                updateTime() {
+                    document.getElementById('currentTime').textContent = this.getCurrentTime();
+                }
+
+                getCurrentTime() {
+                    const now = new Date();
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                }
+
+                saveMessages() {
+                    // 只保存最近50条消息
+                    const recentMessages = this.messages.slice(-50);
+                    localStorage.setItem('chatMessages', JSON.stringify(recentMessages));
+                }
+
+                loadMessages() {
+                    if (this.messages.length > 0) {
+                        const messagesContainer = document.getElementById('chatMessages');
+
+                        this.messages.forEach(msg => {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = `message ${msg.sender}-message`;
+
+                            const time = new Date(msg.time).toLocaleTimeString('zh-CN', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+
+                            messageDiv.innerHTML = `
                             <div class="message-avatar">${msg.sender === 'user' ? '我' : ''}</div>
                             <div class="message-content">
                                 ${msg.text}
                                 <div class="message-time">${time}</div>
                             </div>
                         `;
-                        
-                        messagesContainer.insertBefore(messageDiv, document.getElementById('typingIndicator'));
-                    });
-                    
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                            messagesContainer.insertBefore(messageDiv, document.getElementById('typingIndicator'));
+                        });
+
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
                 }
             }
-        }
-        
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            new ChatSystem();
-        });
-    </script>
+
+            // 页面加载完成后初始化
+            document.addEventListener('DOMContentLoaded', () => {
+                new ChatSystem();
+            });
+        </script>
+    </div>
 </body>
+
 </html>

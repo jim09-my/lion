@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%);
@@ -19,7 +20,7 @@
             overflow-x: hidden;
             position: relative;
         }
-        
+
         /* 背景装饰 */
         .bg-pattern {
             position: fixed;
@@ -28,13 +29,13 @@
             width: 100%;
             height: 100%;
             opacity: 0.1;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 20% 50%, #DC143C 2px, transparent 2px),
                 radial-gradient(circle at 80% 50%, #DC143C 2px, transparent 2px);
             background-size: 100px 100px;
             z-index: -1;
         }
-        
+
         /* 主容器 */
         .main-container {
             max-width: 420px;
@@ -43,7 +44,7 @@
             position: relative;
             padding: 20px;
         }
-        
+
         /* 状态栏 */
         .status-bar {
             display: flex;
@@ -55,13 +56,13 @@
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .kapok-status {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .kapok-icon {
             width: 40px;
             height: 40px;
@@ -69,18 +70,61 @@
             background-size: contain;
             transition: all 0.3s ease;
         }
-        
+
         .kapok-icon.blooming {
             filter: brightness(1.3) saturate(1.5);
             transform: scale(1.1);
         }
-        
+
         .intimacy-level {
             font-size: 14px;
             color: #2F4F2F;
             font-weight: 500;
         }
-        
+
+        /* 生菜图标样式 */
+        .lettuce-icon {
+            position: absolute;
+            bottom: 50px;
+            /* 调整位置，让它在醒狮下方一点 */
+            right: 50px;
+            /* 调整位置 */
+            width: 60px;
+            height: 60px;
+            background: url('resources/lettuce.png') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            z-index: 5;
+            /* 确保在醒狮之上，方便点击 */
+            /* 添加 transform-origin，让它围绕底部中心缩放/旋转 */
+            transform-origin: bottom center;
+        }
+
+        .lettuce-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* 祝福卡片弹窗样式 (现在它是一个独立的弹窗) */
+        .blessing-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            /* 更深的背景，突出卡片 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            /* 比喂食弹窗更高 */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+
         .daily-feed {
             background: linear-gradient(45deg, #FF6347, #FF8C69);
             color: white;
@@ -92,18 +136,18 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(255, 99, 71, 0.3);
         }
-        
+
         .daily-feed:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 99, 71, 0.4);
         }
-        
+
         .daily-feed:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         /* 醒狮容器 */
         .lion-container {
             position: relative;
@@ -113,31 +157,38 @@
             align-items: center;
             margin-bottom: 30px;
         }
-        
+
         .lion-character {
             width: 280px;
             height: 320px;
-            background: url('resources/lion_main.png') no-repeat center;
+            background: url('resources/lion_smile.png') no-repeat center;
             background-size: contain;
             position: relative;
             cursor: pointer;
             transition: all 0.3s ease;
             transform-style: preserve-3d;
         }
-        
+
         .lion-character:hover {
             transform: scale(1.05) rotateY(5deg);
         }
-        
+
         .lion-character.petting {
             animation: petting 0.5s ease-in-out;
         }
-        
+
         @keyframes petting {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1) translateY(-5px); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1) translateY(-5px);
+            }
         }
-        
+
         /* 触摸区域 */
         .touch-area {
             position: absolute;
@@ -145,33 +196,33 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .touch-area:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
-        
+
         .head-area {
             width: 120px;
             height: 100px;
             top: 50px;
             left: 80px;
         }
-        
+
         .back-area {
             width: 100px;
             height: 80px;
             top: 150px;
             left: 90px;
         }
-        
+
         .chin-area {
             width: 80px;
             height: 60px;
             top: 180px;
             left: 100px;
         }
-        
+
         .heart-particle {
             position: absolute;
             color: #FF69B4;
@@ -179,18 +230,19 @@
             pointer-events: none;
             animation: heartFloat 2s ease-out forwards;
         }
-        
+
         @keyframes heartFloat {
             0% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
+
             100% {
                 opacity: 0;
                 transform: translateY(-100px) scale(1.5);
             }
         }
-        
+
         /* 对话气泡 */
         .chat-bubble {
             position: absolute;
@@ -207,12 +259,12 @@
             transform: scale(0);
             transition: all 0.3s ease;
         }
-        
+
         .chat-bubble.show {
             opacity: 1;
             transform: scale(1);
         }
-        
+
         .chat-bubble::after {
             content: '';
             position: absolute;
@@ -224,14 +276,14 @@
             border-right: 8px solid transparent;
             border-top: 8px solid white;
         }
-        
+
         /* 功能按钮区域 */
         .function-buttons {
             display: flex;
             justify-content: space-around;
             margin-bottom: 30px;
         }
-        
+
         .function-btn {
             display: flex;
             flex-direction: column;
@@ -247,13 +299,13 @@
             color: inherit;
             min-width: 80px;
         }
-        
+
         .function-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             background: rgba(255, 255, 255, 1);
         }
-        
+
         .btn-icon {
             width: 40px;
             height: 40px;
@@ -261,25 +313,25 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-        
+
         .chat-icon {
             background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23DC143C"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>');
         }
-        
+
         .diary-icon {
             background-image: url('resources/diary_book.png');
         }
-        
+
         .memory-icon {
             background-image: url('resources/memory_book.png');
         }
-        
+
         .btn-text {
             font-size: 12px;
             color: #2F4F2F;
             font-weight: 500;
         }
-        
+
         /* 底部对话框 */
         .bottom-dialog {
             background: rgba(255, 255, 255, 0.95);
@@ -290,23 +342,23 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .bottom-dialog:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .dialog-text {
             font-size: 14px;
             color: #2F4F2F;
             margin-bottom: 5px;
         }
-        
+
         .dialog-hint {
             font-size: 12px;
             color: #888;
         }
-        
+
         /* 喂食选择弹窗 */
         .feed-modal {
             position: fixed;
@@ -320,7 +372,7 @@
             align-items: center;
             z-index: 1000;
         }
-        
+
         .feed-content {
             background: white;
             border-radius: 20px;
@@ -329,21 +381,21 @@
             width: 90%;
             text-align: center;
         }
-        
+
         .feed-title {
             font-size: 18px;
             color: #2F4F2F;
             margin-bottom: 20px;
             font-weight: 600;
         }
-        
+
         .silk-ball-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 25px;
         }
-        
+
         .silk-ball-option {
             background: linear-gradient(135deg, #FFF8DC, #F4A460);
             border: 2px solid #DC143C;
@@ -352,24 +404,24 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .silk-ball-option:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(220, 20, 60, 0.3);
         }
-        
+
         .ball-name {
             font-size: 14px;
             color: #2F4F2F;
             font-weight: 600;
             margin-bottom: 5px;
         }
-        
+
         .ball-desc {
             font-size: 12px;
             color: #666;
         }
-        
+
         .close-modal {
             background: #ccc;
             color: white;
@@ -380,41 +432,42 @@
             font-size: 14px;
             transition: all 0.3s ease;
         }
-        
+
         .close-modal:hover {
             background: #999;
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 480px) {
             .main-container {
                 padding: 15px;
             }
-            
+
             .lion-character {
                 width: 250px;
                 height: 280px;
             }
-            
+
             .lion-container {
                 height: 350px;
             }
-            
+
             .function-buttons {
                 gap: 10px;
             }
-            
+
             .function-btn {
                 min-width: 70px;
                 padding: 12px;
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
+
 <body>
     <div class="bg-pattern"></div>
-    
+
     <div class="main-container">
         <!-- 状态栏 -->
         <div class="status-bar">
@@ -424,7 +477,7 @@
             </div>
             <button class="daily-feed" id="dailyFeedBtn">每日喂食</button>
         </div>
-        
+
         <!-- 醒狮角色 -->
         <div class="lion-container">
             <div class="lion-character" id="lionCharacter">
@@ -433,8 +486,9 @@
                 <div class="touch-area chin-area" data-area="chin"></div>
                 <div class="chat-bubble" id="chatBubble">想和我聊聊天吗？</div>
             </div>
+            <div class="lettuce-icon" id="lettuceIcon"></div>
         </div>
-        
+
         <!-- 功能按钮 -->
         <div class="function-buttons">
             <a href="chat.html" class="function-btn">
@@ -450,14 +504,14 @@
                 <div class="btn-text">回忆</div>
             </a>
         </div>
-        
+
         <!-- 底部对话框 -->
         <div class="bottom-dialog" onclick="window.location.href='chat.html'">
             <div class="dialog-text">今天过得怎么样？</div>
             <div class="dialog-hint">点击与我聊天 →</div>
         </div>
     </div>
-    
+
     <!-- 喂食选择弹窗 -->
     <div class="feed-modal" id="feedModal">
         <div class="feed-content">
@@ -480,18 +534,21 @@
                     <div class="ball-desc">带来欢乐与正能量</div>
                 </div>
             </div>
-              <!-- 祝福卡片弹窗 -->
-    <div class="blessing-modal" id="blessingModal">
-        <div class="blessing-card">
-            <div class="blessing-text" id="blessingText">步步高升</div>
-            <div class="blessing-message" id="blessingMessage">愿你在人生的道路上步步高升，前程似锦！</div>
-            <button class="blessing-close" onclick="closeBlessingModal()">收到祝福</button>
+
         </div>
-    </div>
-            <button class="close-modal" onclick="closeFeedModal()">取消</button>
+
+        <!-- 祝福卡片弹窗 -->
+        <div class="blessing-modal" id="blessingModal">
+            <div class="blessing-card">
+                <div class="blessing-text" id="blessingText">步步高升</div>
+                <div class="blessing-message" id="blessingMessage">愿你在人生的道路上步步高升，前程似锦！</div>
+                <button class="blessing-close" onclick="closeBlessingModal()">收到祝福</button>
+            </div>
         </div>
-    </div>
-    
-    <script src="main.js"></script>
+        <button class="close-modal" onclick="closeFeedModal()">取消</button>
+
+
+        <script src="main.js"></script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,21 +12,21 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #FFF8DC 0%, #F4A460 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         .memory-container {
             max-width: 420px;
             margin: 0 auto;
             min-height: 100vh;
             background: rgba(255, 255, 255, 0.1);
         }
-        
+
         /* 顶部导航 */
         .memory-header {
             background: rgba(255, 255, 255, 0.95);
@@ -38,7 +39,7 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .back-btn {
             width: 40px;
             height: 40px;
@@ -52,49 +53,49 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
+
         .back-btn:hover {
             background: #B91C3C;
             transform: scale(1.05);
         }
-        
+
         .memory-title {
             flex: 1;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .memory-icon {
             width: 35px;
             height: 35px;
             background: url('resources/memory_book.png') no-repeat center;
             background-size: contain;
         }
-        
+
         .title-text {
             font-size: 18px;
             font-weight: 600;
             color: #2F4F2F;
         }
-        
+
         .memory-stats {
             font-size: 12px;
             color: #666;
         }
-        
+
         /* 标签切换 */
         .tab-container {
             background: rgba(255, 255, 255, 0.95);
             padding: 0 20px;
             border-bottom: 1px solid #e0e0e0;
         }
-        
+
         .tabs {
             display: flex;
             gap: 20px;
         }
-        
+
         .tab {
             padding: 12px 0;
             cursor: pointer;
@@ -104,11 +105,11 @@
             position: relative;
             transition: all 0.3s ease;
         }
-        
+
         .tab.active {
             color: #DC143C;
         }
-        
+
         .tab.active::after {
             content: '';
             position: absolute;
@@ -119,21 +120,21 @@
             background: #DC143C;
             border-radius: 3px 3px 0 0;
         }
-        
+
         /* 内容区域 */
         .content-area {
             padding: 20px;
             min-height: calc(100vh - 200px);
         }
-        
+
         .tab-content {
             display: none;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
         /* 成就系统 */
         .achievements-grid {
             display: grid;
@@ -141,7 +142,7 @@
             gap: 15px;
             margin-bottom: 30px;
         }
-        
+
         .achievement-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -152,22 +153,22 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .achievement-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .achievement-card.locked {
             opacity: 0.6;
             background: rgba(200, 200, 200, 0.3);
         }
-        
+
         .achievement-card.locked:hover {
             transform: none;
             box-shadow: none;
         }
-        
+
         .achievement-icon {
             width: 60px;
             height: 60px;
@@ -176,28 +177,28 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-        
+
         .achievement-icon.unlocked {
             filter: none;
         }
-        
+
         .achievement-icon.locked {
             filter: grayscale(100%) brightness(0.7);
         }
-        
+
         .achievement-name {
             font-size: 14px;
             font-weight: 600;
             color: #2F4F2F;
             margin-bottom: 8px;
         }
-        
+
         .achievement-desc {
             font-size: 12px;
             color: #666;
             line-height: 1.4;
         }
-        
+
         .achievement-progress {
             position: absolute;
             top: 10px;
@@ -208,7 +209,7 @@
             padding: 2px 6px;
             border-radius: 10px;
         }
-        
+
         /* 照片墙 */
         .photo-wall {
             display: grid;
@@ -216,7 +217,7 @@
             gap: 15px;
             margin-bottom: 30px;
         }
-        
+
         .photo-item {
             aspect-ratio: 1;
             background: rgba(255, 255, 255, 0.95);
@@ -226,12 +227,12 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        
+
         .photo-item:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .photo-item.empty {
             display: flex;
             align-items: center;
@@ -241,7 +242,7 @@
             text-align: center;
             padding: 10px;
         }
-        
+
         .photo-placeholder {
             width: 100%;
             height: 100%;
@@ -251,7 +252,7 @@
             justify-content: center;
             font-size: 30px;
         }
-        
+
         .photo-info {
             position: absolute;
             bottom: 0;
@@ -262,13 +263,13 @@
             padding: 10px;
             font-size: 11px;
         }
-        
+
         /* 时间线 */
         .timeline {
             position: relative;
             padding-left: 30px;
         }
-        
+
         .timeline::before {
             content: '';
             position: absolute;
@@ -278,7 +279,7 @@
             width: 2px;
             background: #DC143C;
         }
-        
+
         .timeline-item {
             position: relative;
             margin-bottom: 30px;
@@ -288,12 +289,12 @@
             margin-left: 20px;
             transition: all 0.3s ease;
         }
-        
+
         .timeline-item:hover {
             transform: translateX(5px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -305,34 +306,34 @@
             border-radius: 50%;
             border: 3px solid white;
         }
-        
+
         .timeline-date {
             font-size: 12px;
             color: #DC143C;
             font-weight: 600;
             margin-bottom: 8px;
         }
-        
+
         .timeline-title {
             font-size: 14px;
             font-weight: 600;
             color: #2F4F2F;
             margin-bottom: 8px;
         }
-        
+
         .timeline-desc {
             font-size: 13px;
             color: #666;
             line-height: 1.4;
         }
-        
+
         /* 空状态 */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #666;
         }
-        
+
         .empty-icon {
             width: 80px;
             height: 80px;
@@ -341,61 +342,64 @@
             margin: 0 auto 20px;
             opacity: 0.5;
         }
-        
+
         .empty-text {
             font-size: 16px;
             margin-bottom: 10px;
         }
-        
+
         .empty-hint {
             font-size: 14px;
             color: #999;
         }
-        
+
         /* 解锁动画 */
         @keyframes unlock {
             0% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.1);
             }
+
             100% {
                 transform: scale(1);
             }
         }
-        
+
         .unlock-animation {
             animation: unlock 0.5s ease-out;
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 480px) {
             .memory-container {
                 max-width: 100%;
             }
-            
+
             .content-area {
                 padding: 15px;
             }
-            
+
             .achievements-grid {
                 grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
                 gap: 10px;
             }
-            
+
             .achievement-card {
                 padding: 15px;
             }
-            
+
             .photo-wall {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 gap: 10px;
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
+
 <body>
     <div class="memory-container">
         <!-- 顶部导航 -->
@@ -411,7 +415,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 标签切换 -->
         <div class="tab-container">
             <div class="tabs">
@@ -420,7 +424,7 @@
                 <div class="tab" data-tab="timeline">成长时间线</div>
             </div>
         </div>
-        
+
         <!-- 内容区域 -->
         <div class="content-area">
             <!-- 成就徽章 -->
@@ -429,14 +433,14 @@
                     <!-- 成就卡片将在这里动态生成 -->
                 </div>
             </div>
-            
+
             <!-- 照片墙 -->
             <div class="tab-content" id="photos">
                 <div class="photo-wall" id="photoWall">
                     <!-- 照片将在这里动态生成 -->
                 </div>
             </div>
-            
+
             <!-- 成长时间线 -->
             <div class="tab-content" id="timeline">
                 <div class="timeline" id="timeline">
@@ -445,7 +449,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         class MemorySystem {
             constructor() {
@@ -456,7 +460,7 @@
                 this.achievements = JSON.parse(localStorage.getItem('achievements')) || [];
                 this.photos = JSON.parse(localStorage.getItem('photos')) || [];
                 this.timelineEvents = JSON.parse(localStorage.getItem('timelineEvents')) || [];
-                
+
                 this.achievementDefinitions = [
                     {
                         id: 'first_meet',
@@ -555,17 +559,17 @@
                         unlocked: false
                     }
                 ];
-                
+
                 this.init();
             }
-            
+
             init() {
                 this.bindEvents();
                 this.checkAchievements();
                 this.updateStats();
                 this.renderAll();
             }
-            
+
             bindEvents() {
                 // 标签切换
                 document.querySelectorAll('.tab').forEach(tab => {
@@ -574,27 +578,27 @@
                     });
                 });
             }
-            
+
             switchTab(tabName) {
                 // 更新标签状态
                 document.querySelectorAll('.tab').forEach(tab => {
                     tab.classList.remove('active');
                 });
                 document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-                
+
                 // 更新内容状态
                 document.querySelectorAll('.tab-content').forEach(content => {
                     content.classList.remove('active');
                 });
                 document.getElementById(tabName).classList.add('active');
-                
+
                 // 渲染对应内容
                 this.renderTabContent(tabName);
             }
-            
+
             checkAchievements() {
                 let newUnlocks = 0;
-                
+
                 this.achievementDefinitions.forEach(achievement => {
                     if (!achievement.unlocked && achievement.condition()) {
                         achievement.unlocked = true;
@@ -602,12 +606,12 @@
                         newUnlocks++;
                     }
                 });
-                
+
                 if (newUnlocks > 0) {
                     this.saveAchievements();
                 }
             }
-            
+
             unlockAchievement(achievement) {
                 // 添加到已解锁成就
                 this.achievements.push({
@@ -616,7 +620,7 @@
                     name: achievement.name,
                     description: achievement.description
                 });
-                
+
                 // 添加到时间线
                 this.timelineEvents.push({
                     date: new Date().toISOString(),
@@ -624,15 +628,15 @@
                     description: achievement.description,
                     type: 'achievement'
                 });
-                
+
                 // 生成照片
                 this.generatePhoto(achievement);
-                
+
                 // 保存数据
                 this.saveTimeline();
                 this.savePhotos();
             }
-            
+
             generatePhoto(achievement) {
                 const photos = [
                     {
@@ -643,23 +647,23 @@
                         type: 'achievement'
                     }
                 ];
-                
+
                 this.photos.push(...photos);
             }
-            
+
             updateStats() {
                 const unlockedCount = this.achievements.length;
                 document.getElementById('unlockedCount').textContent = unlockedCount;
             }
-            
+
             renderAll() {
                 this.renderAchievements();
                 this.renderPhotos();
                 this.renderTimeline();
             }
-            
+
             renderTabContent(tabName) {
-                switch(tabName) {
+                switch (tabName) {
                     case 'achievements':
                         this.renderAchievements();
                         break;
@@ -671,44 +675,44 @@
                         break;
                 }
             }
-            
+
             renderAchievements() {
                 const container = document.getElementById('achievementsGrid');
                 container.innerHTML = '';
-                
+
                 this.achievementDefinitions.forEach(achievement => {
                     const card = this.createAchievementCard(achievement);
                     container.appendChild(card);
                 });
             }
-            
+
             createAchievementCard(achievement) {
                 const card = document.createElement('div');
                 card.className = `achievement-card ${achievement.unlocked ? '' : 'locked'}`;
-                
+
                 const progress = this.getAchievementProgress(achievement);
-                
+
                 card.innerHTML = `
                     <div class="achievement-icon ${achievement.unlocked ? 'unlocked' : 'locked'}">
                         ${achievement.icon}
                     </div>
                     <div class="achievement-name">${achievement.name}</div>
                     <div class="achievement-desc">${achievement.description}</div>
-                    ${!achievement.unlocked && progress ? 
+                    ${!achievement.unlocked && progress ?
                         `<div class="achievement-progress">${progress}</div>` : ''}
                 `;
-                
+
                 if (achievement.unlocked) {
                     card.addEventListener('click', () => {
                         this.showAchievementDetail(achievement);
                     });
                 }
-                
+
                 return card;
             }
-            
+
             getAchievementProgress(achievement) {
-                switch(achievement.id) {
+                switch (achievement.id) {
                     case 'intimacy_10':
                         return `${this.intimacy}/10`;
                     case 'intimacy_30':
@@ -725,41 +729,41 @@
                         return null;
                 }
             }
-            
+
             renderPhotos() {
                 const container = document.getElementById('photoWall');
                 container.innerHTML = '';
-                
+
                 if (this.photos.length === 0) {
                     this.renderEmptyPhotoWall(container);
                     return;
                 }
-                
+
                 this.photos.forEach(photo => {
                     const photoItem = this.createPhotoItem(photo);
                     container.appendChild(photoItem);
                 });
-                
+
                 // 添加空位提示
                 for (let i = this.photos.length; i < 12; i++) {
                     const emptyItem = this.createEmptyPhotoItem();
                     container.appendChild(emptyItem);
                 }
             }
-            
+
             renderEmptyPhotoWall(container) {
                 for (let i = 0; i < 12; i++) {
                     const emptyItem = this.createEmptyPhotoItem();
                     container.appendChild(emptyItem);
                 }
             }
-            
+
             createPhotoItem(photo) {
                 const item = document.createElement('div');
                 item.className = 'photo-item';
-                
+
                 const date = new Date(photo.date).toLocaleDateString('zh-CN');
-                
+
                 item.innerHTML = `
                     <div class="photo-placeholder">
                         ${photo.emoji || '📸'}
@@ -769,14 +773,14 @@
                         <div style="font-size: 10px; opacity: 0.8;">${date}</div>
                     </div>
                 `;
-                
+
                 item.addEventListener('click', () => {
                     this.showPhotoDetail(photo);
                 });
-                
+
                 return item;
             }
-            
+
             createEmptyPhotoItem() {
                 const item = document.createElement('div');
                 item.className = 'photo-item empty';
@@ -788,27 +792,27 @@
                 `;
                 return item;
             }
-            
+
             renderTimeline() {
                 const container = document.getElementById('timeline');
                 container.innerHTML = '';
-                
+
                 if (this.timelineEvents.length === 0) {
                     this.renderEmptyTimeline(container);
                     return;
                 }
-                
+
                 // 按时间排序
                 const sortedEvents = this.timelineEvents
                     .sort((a, b) => new Date(b.date) - new Date(a.date))
                     .slice(0, 20);
-                
+
                 sortedEvents.forEach(event => {
                     const timelineItem = this.createTimelineItem(event);
                     container.appendChild(timelineItem);
                 });
             }
-            
+
             renderEmptyTimeline(container) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -818,11 +822,11 @@
                     </div>
                 `;
             }
-            
+
             createTimelineItem(event) {
                 const item = document.createElement('div');
                 item.className = 'timeline-item';
-                
+
                 const date = new Date(event.date);
                 const dateStr = date.toLocaleDateString('zh-CN', {
                     year: 'numeric',
@@ -833,46 +837,47 @@
                     hour: '2-digit',
                     minute: '2-digit'
                 });
-                
+
                 item.innerHTML = `
                     <div class="timeline-date">${dateStr} ${timeStr}</div>
                     <div class="timeline-title">${event.title}</div>
                     <div class="timeline-desc">${event.description}</div>
                 `;
-                
+
                 return item;
             }
-            
+
             checkConsecutiveDays(days) {
                 // 简化的连续天数检查
                 return this.conversationCount >= days;
             }
-            
+
             showAchievementDetail(achievement) {
                 alert(`🏆 ${achievement.name}\n\n${achievement.description}\n\n解锁时间：${new Date().toLocaleDateString('zh-CN')}`);
             }
-            
+
             showPhotoDetail(photo) {
                 alert(`📸 ${photo.title}\n\n${photo.description}\n\n拍摄时间：${new Date(photo.date).toLocaleDateString('zh-CN')}`);
             }
-            
+
             saveAchievements() {
                 localStorage.setItem('achievements', JSON.stringify(this.achievements));
             }
-            
+
             savePhotos() {
                 localStorage.setItem('photos', JSON.stringify(this.photos));
             }
-            
+
             saveTimeline() {
                 localStorage.setItem('timelineEvents', JSON.stringify(this.timelineEvents));
             }
         }
-        
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
             new MemorySystem();
         });
     </script>
 </body>
+
 </html>
